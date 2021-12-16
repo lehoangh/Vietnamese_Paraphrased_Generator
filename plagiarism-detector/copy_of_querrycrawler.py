@@ -9,22 +9,14 @@ Original file is located at
 
 from bs4 import BeautifulSoup as bs
 import requests
-import nltk
-from difflib import SequenceMatcher
-import pandas as pd
 from urllib.parse import quote
-import time
+import spacy
 
-def getTextFromHtml(text):
-  return text.replace('<strong>', '').replace('</strong>', '').replace('<cite>', '').replace('</cite>', '').replace('<p>', '').replace('</p>', '')
-
-def similarity(str1, str2):
-    return (SequenceMatcher(None,str1,str2).ratio())*100
 
 def querry(searchString):
   is_plagrism = False
   is_plagrism_links = []
-  start = time.time()
+  search_result_contents = []
   TIMEOUT_DURATION = 3
   PLAGIARISED_THRESHOLD = 0.8
   url = 'https://www.bing.com/search?q='+quote(searchString)
@@ -50,7 +42,9 @@ def querry(searchString):
     # print(searchString)
     search_unique = set(searchString.lower().split(' '))
     # print(len(search_unique))
-    result_text = set(text_para.text.lower().replace('...','').strip().split('·')[-1].split(' '))
+    search_result_content = text_para.text.lower().replace('...','').strip().split('·')[-1]
+    search_result_contents.append(search_result_content)
+    result_text = set(search_result_content.split(' '))
     bold_array = result.find_all('strong')
     for s in range(len(bold_array)):
       bold_array[s] = bold_array[s].text.lower()
@@ -63,14 +57,20 @@ def querry(searchString):
       is_plagrism = True
       is_plagrism_links.append(cite)
     print("-----"*3)    
-  return is_plagrism,is_plagrism_links
+  return is_plagrism,is_plagrism_links,search_result_contents
 
-is_plag, links = querry('hlv shin tae-yong xem quang hải là mối nguy hiểm khi indonesia gặp việt nam')
+search_string = 'hlv shin tae-yong xem quang hải là mối nguy hiểm khi indonesia gặp việt nam'
+(is_plag, links,search_result_contents) = querry(search_string)
+
 if is_plag:
   print('Is Plagiarism')
-  print('Links:')
+  print(u'Links:')
   for i in links:
     print('\t', i.text)
 else:
   print('Not Plagiarism')
+nlp = spacy.load('vi_core_news_lg')
+embedded_search_string = nlp(search_string)
+embedded_result_string = nlp(search_result_contents[0])
 
+print('Similarity: ', embedded_search_string.similarity(embedded_result_string))
