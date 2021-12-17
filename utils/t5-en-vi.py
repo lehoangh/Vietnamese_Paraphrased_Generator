@@ -44,6 +44,8 @@ else:
 resume_extract_index = load_checkpoint_index()
     
 src_path = 'train_ready.csv'
+if resume_extract_index != 0:
+    resume_extract_index += 1
 df = pd.read_csv(src_path)[resume_extract_index:]
 df_output = pd.DataFrame(df['annotator_labels'])
 sentence1_list = []
