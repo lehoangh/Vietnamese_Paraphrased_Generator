@@ -16,6 +16,10 @@ else:
     print('No GPU available, using the CPU instead.')
     device = torch.device("cpu")
 
+model = T5ForConditionalGeneration.from_pretrained("NlpHUST/t5-en-vi-base")
+tokenizer = T5Tokenizer.from_pretrained("NlpHUST/t5-en-vi-base")
+model.to(device)
+
 def load_checkpoint_index():
     if os.path.isfile('checkpoint_index.txt'):
         print ("output file File exist")
