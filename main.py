@@ -1,4 +1,4 @@
-import detector
+from plagiarism_detector import copy_of_querrycrawler
 
 if __name__ == '__main__':
 
@@ -8,4 +8,7 @@ if __name__ == '__main__':
     print(s.strip())
     if(len(s)==0):
       continue
-    print('Plagiarised: ', querry(s.strip())=='null')
+    is_plagiarism, link = copy_of_querrycrawler.querry_bing(s.strip())
+    print('Plagiarised: ', is_plagiarism)
+    is_plagiarism, link = copy_of_querrycrawler.querry_google(s.strip())
+    print('Plagiarised: ', is_plagiarism)
