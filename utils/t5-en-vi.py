@@ -6,15 +6,7 @@ import csv
 import os.path
 import pandas as pd
 
-if torch.cuda.is_available():       
-    device = torch.device("cuda")
 
-    print('There are %d GPU(s) available.' % torch.cuda.device_count())
-
-    print('We will use the GPU:', torch.cuda.get_device_name(0))
-else:
-    print('No GPU available, using the CPU instead.')
-    device = torch.device("cpu")
 
 def load_checkpoint_index():
     if os.path.isfile('checkpoint_index.txt'):
@@ -30,7 +22,18 @@ def load_checkpoint_index():
     f.close()
     return index
 
+if torch.cuda.is_available():       
+    device = torch.device("cuda")
 
+    print('There are %d GPU(s) available.' % torch.cuda.device_count())
+
+    print('We will use the GPU:', torch.cuda.get_device_name(0))
+else:
+    print('No GPU available, using the CPU instead.')
+    device = torch.device("cpu")
+model = T5ForConditionalGeneration.from_pretrained("NlpHUST/t5-en-vi-base")
+tokenizer = T5Tokenizer.from_pretrained("NlpHUST/t5-en-vi-base")
+model.to(device)
 
 if os.path.isfile('train_vi.csv'):
     print ("output file File exist")
@@ -38,8 +41,6 @@ else:
     print ("File not exist, create new data file")
     new_df = pd.DataFrame(columns = ['index','sentence1','sentence2'])
     new_df.to_csv('train_vi.csv',index = False)
-
-
 
 resume_extract_index = load_checkpoint_index()
     
