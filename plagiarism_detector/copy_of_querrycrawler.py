@@ -26,14 +26,14 @@ def querry_bing(searchString):
         content = requests.get(url, headers={
                                'User-agent': 'your bot 0.1'}, verify=False, timeout=TIMEOUT_DURATION).content
     except:
-        return 'null'
+        return is_plagrism, is_plagrism_links
     soup = bs(content, 'html.parser')
     body = soup.find('body')
     no_result = body.find_all('li', {"class": "b_no"})
     for r in no_result:
         result_string = r.select('h1')
         if(str(result_string).startswith('[<h1>There are no results for')):
-            return 'null'
+            return is_plagrism, is_plagrism_links
     results = body.find_all('div', {"class": "b_caption"})
     for result in results:
         try:
@@ -62,58 +62,58 @@ def querry_bing(searchString):
                 is_plagrism = True
                 is_plagrism_links.append(cite)
         except:
-            print('skipping search result')
+          print('skipping search result')
+          continue
         print("-----"*3)
     return is_plagrism, is_plagrism_links
 
 
 def querry_google(searchString):
-    nlp = spacy.load('vi_core_news_lg')
-    is_plagrism = False
-    ballot = False
-    is_plagrism_links = []
-    TIMEOUT_DURATION = 3
-    PLAGIARISED_THRESHOLD = 0.5
-    url = 'https://www.google.com/search?q='+quote(searchString)
-    print(url)
+  nlp = spacy.load('vi_core_news_lg')
+  is_plagrism = False
+  is_plagrism_links = []
+  TIMEOUT_DURATION = 3
+  PLAGIARISED_THRESHOLD = 0.5
+  url = 'https://www.google.com/search?q='+quote(searchString)
+  try:
+      content = requests.get(url, headers={
+                              'User-agent': 'your bot 0.1'}, verify=False, timeout=TIMEOUT_DURATION).content
+  except:
+      return is_plagrism, is_plagrism_links
+  soup = bs(content, 'html.parser')
+  body = soup.find('body')
+  results = body.find_all('div', {"class": "ZINbbc xpd O9g5cc uUPGi"})
+  for result in results:
     try:
-        content = requests.get(url, headers={
-                               'User-agent': 'your bot 0.1'}, verify=False, timeout=TIMEOUT_DURATION).content
+        cite = result.find_all('div', {'class': 'kCrYT'})[0]
+        cite = cite.find('a', href=True)
+        cite = cite['href'][7:]
+
+        text_para = result.find_all('div', {'class': 'kCrYT'})[1]
+        text_para = text_para.find(
+            'div', {"class": "BNeawe s3v9rd AP7Wnd"})
+
+        search_unique = set(searchString.strip().lower().split())
+        search_result_content = text_para.text.strip(
+        ).lower().replace('...', '').split('·')[-1]
+        result_text = set(search_result_content.split(' '))
+        bold_array = set(result_text)
+        bold_unique = set(' '.join(bold_array).split(' '))
+        match_bold = len(search_unique & bold_unique)/len(search_unique)
+        result_match = len(result_text & bold_unique)/len(bold_unique)
+        print(f'% match bold: {match_bold}')
+        print(f'% result match: {result_match}')
+
+        embedded_search_string = nlp(searchString.strip())
+        embedded_result_string = nlp(search_result_content)
+        similarity_score = embedded_search_string.similarity(
+            embedded_result_string)
+        print(f'% similarity: {similarity_score}')
+        if match_bold > PLAGIARISED_THRESHOLD and result_match > PLAGIARISED_THRESHOLD and similarity_score > PLAGIARISED_THRESHOLD:
+            is_plagrism = True
+            is_plagrism_links.append(cite)
     except:
-        return 'null'
-    soup = bs(content, 'html.parser')
-    body = soup.find('body')
-    results = body.find_all('div', {"class": "ZINbbc xpd O9g5cc uUPGi"})
-    for result in results:
-        try:
-            cite = result.find_all('div', {'class': 'kCrYT'})[0]
-            cite = cite.find('a', href=True)
-            cite = cite['href'][7:]
-
-            text_para = result.find_all('div', {'class': 'kCrYT'})[1]
-            text_para = text_para.find(
-                'div', {"class": "BNeawe s3v9rd AP7Wnd"})
-
-            search_unique = set(searchString.strip().lower().split())
-            search_result_content = text_para.text.strip(
-            ).lower().replace('...', '').split('·')[-1]
-            result_text = set(search_result_content.split(' '))
-            bold_array = set(result_text)
-            bold_unique = set(' '.join(bold_array).split(' '))
-            match_bold = len(search_unique & bold_unique)/len(search_unique)
-            result_match = len(result_text & bold_unique)/len(bold_unique)
-            print(f'% match bold: {match_bold}')
-            print(f'% result match: {result_match}')
-
-            embedded_search_string = nlp(searchString.strip())
-            embedded_result_string = nlp(search_result_content)
-            similarity_score = embedded_search_string.similarity(
-                embedded_result_string)
-            print(f'% similarity: {similarity_score}')
-            if match_bold > PLAGIARISED_THRESHOLD and result_match > PLAGIARISED_THRESHOLD and similarity_score > PLAGIARISED_THRESHOLD:
-                is_plagrism = True
-                is_plagrism_links.append(cite)
-        except:
-            print('skipping search result')
-        print("-----"*3)
-    return is_plagrism, is_plagrism_links
+        print('skipping search result')
+        continue
+    print("-----"*3)
+  return is_plagrism, is_plagrism_links

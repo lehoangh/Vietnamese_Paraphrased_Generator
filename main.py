@@ -8,5 +8,7 @@ if __name__ == '__main__':
     print(s.strip())
     if(len(s)==0):
       continue
-    print('Plagiarised: ', copy_of_querrycrawler.querry_bing(s.strip())[0]=='null')
-    print('Plagiarised: ', copy_of_querrycrawler.querry_google(s.strip())[0]=='null')
+    is_plagiarism, link = copy_of_querrycrawler.querry_bing(s.strip())
+    print('Plagiarised: ', is_plagiarism)
+    is_plagiarism, link = copy_of_querrycrawler.querry_google(s.strip())
+    print('Plagiarised: ', is_plagiarism)
