@@ -12,3 +12,5 @@ if __name__ == '__main__':
     print('Plagiarised: ', is_plagiarism)
     is_plagiarism, link = copy_of_querrycrawler.querry_google(s.strip())
     print('Plagiarised: ', is_plagiarism)
+    
+    
