@@ -17,3 +17,7 @@ def check_2(searchString):
             output.append((s, False))
     return output
     
+
+def check_1(source_sentence,para_sentence):
+    is_pla, matches = copy_of_querrycrawler.check1(source_sentence,para_sentence)
+    return is_pla, matches

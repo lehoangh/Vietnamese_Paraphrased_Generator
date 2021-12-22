@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup as bs
 import requests
 from urllib.parse import quote
 import spacy
+import re
 
 
 def querry_bing(searchString):
@@ -117,3 +118,23 @@ def querry_google(searchString):
         continue
     print("-----"*3)
   return is_plagrism, is_plagrism_links
+  
+def check1(source_sentence,input_sentence):
+  
+  for k in source_sentence.split("\n"):
+      source_sentence = re.sub(r"[^a-zA-Z0-9]+", ' ', k)
+  for k in input_sentence.split("\n"):
+      input_sentence = re.sub(r"[^a-zA-Z0-9]+", ' ', k)
+
+  source_set = set(source_sentence.split(' '))
+  input_set = set(input_sentence.split(' '))
+
+  match_percentage = len(source_set & input_set)/len(source_set)
+  print(match_percentage)
+
+
+
+  if match_percentage > PLAGIARISED_THRESHOLD:
+    return True, source_set & input_set
+  else: 
+    return False, source_set & input_set
