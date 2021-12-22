@@ -1,0 +1,13 @@
+{
+    "jupyter.jupyterServerType": "local",
+    "jupyter.kernels.filter": [
+        {
+            "path": "~\\Miniconda3\\python.exe",
+            "type": "pythonEnvironment"
+        },
+        {
+            "path": "C:\\ProgramData\\Anaconda3\\python.exe",
+            "type": "pythonEnvironment"
+        }
+    ]
+}

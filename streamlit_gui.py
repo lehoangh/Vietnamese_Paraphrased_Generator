@@ -10,6 +10,7 @@ if 'original' not in st.session_state:
     st.session_state["original"] = None
 if 'own' not in st.session_state:
     st.session_state["own"] = None
+st.session_state["choosing"] = [st.write('1')]*2
 
 def plagiarism_detector():#(original, own_para):
     #todo: implement plagiarism detection
@@ -22,11 +23,13 @@ def plagiarism_detector():#(original, own_para):
     st.session_state["expander_3_open"] = False
     # return [(sent1, "+"), (sent2, "-")]#, (sent3, "+")]
 
-######################################################################################################################
+
+
+##############################111111111111111111111########################################################################################
 with st.expander("Input your text right down here", expanded=st.session_state["expander_1_open"]):
     st.session_state["original"] = st.text_area(label="Original text")#, on_change, placeholder=)
     st.session_state["own"] = st.text_area(label="Your own paraphrased text")#, on_change, placeholder=)
-    st.button('Detector & generator', on_click=plagiarism_detector())
+    st.button('Detector & generator', on_click=plagiarism_detector)
 ######################################################################################################################
 
 
@@ -39,17 +42,25 @@ def paraphrase_generator():#(original, own_para):
     st.session_state["expander_1_open"] = False
     st.session_state["expander_2_open"] = False
     st.session_state["expander_3_open"] = True
+    st.session_state["choosing"] = [st.session_state["own"], st.session_state["original"], st.write('2')]
+    
     # return [(sent1, "+"), (sent2, "-")]#, (sent3, "+")]
 
 
-######################################################################################################################
+##############################222222222222222222222########################################################################################
 with st.expander("Choose your own paraphrased sentence", expanded=st.session_state["expander_2_open"]):
     # for i in output_1:
     #     sent = i[0]
     #     plag = i[1]
     #     if plag:
     #         st.radio(sent, ["+", "-", "="])
-    st.button('Save', on_click=paraphrase_generator())
+    st.write(st.session_state["own"])
+    st.write(st.session_state["original"])
+    for i in st.session_state["choosing"]:
+        st.write('a')
+    st.write("facebook")
+    st.button('Save', on_click=paraphrase_generator)
+    
 ######################################################################################################################    
 
 def another_example():#(original, own_para):
@@ -61,8 +72,8 @@ def another_example():#(original, own_para):
 
 output_2 = []
 
-######################################################################################################################
+########################33333333333333333333333333333##############################################################################################
 with st.expander("Final result", expanded=st.session_state["expander_3_open"]):
     st.write('a')
-    st.button('Another example', on_click=another_example())
-    
+    st.button('Another example', on_click=another_example)
+######################################################################################################################
