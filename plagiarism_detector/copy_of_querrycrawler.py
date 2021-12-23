@@ -12,6 +12,7 @@ import requests
 from urllib.parse import quote
 import spacy
 import re
+PLAGIARISED_THRESHOLD = 0.5
 
 
 def querry_bing(searchString):
@@ -70,11 +71,11 @@ def querry_bing(searchString):
 
 
 def querry_google(searchString):
+  PLAGIARISED_THRESHOLD = 0.5
   nlp = spacy.load('vi_core_news_lg')
   is_plagrism = False
   is_plagrism_links = []
   TIMEOUT_DURATION = 3
-  PLAGIARISED_THRESHOLD = 0.5
   url = 'https://www.google.com/search?q='+quote(searchString)
   try:
       content = requests.get(url, headers={
@@ -120,7 +121,7 @@ def querry_google(searchString):
   return is_plagrism, is_plagrism_links
   
 def check1(source_sentence,input_sentence):
-  
+  PLAGIARISED_THRESHOLD = 0.5
   for k in source_sentence.split("\n"):
       source_sentence = re.sub(r"[^a-zA-Z0-9]+", ' ', k)
   for k in input_sentence.split("\n"):
@@ -131,10 +132,7 @@ def check1(source_sentence,input_sentence):
 
   match_percentage = len(source_set & input_set)/len(source_set)
   print(match_percentage)
-
-
-
-  if match_percentage > PLAGIARISED_THRESHOLD:
-    return True, source_set & input_set
-  else: 
-    return False, source_set & input_set
+  if match_percentage > 0.7:
+    return True
+  else:
+    return False
