@@ -1,2 +1,9 @@
 bs4==0.0.1
-lxml==4.2.6
+requests==2.26.0
+pyvi==0.1.1
+pandas==1.1.5
+torch==1.10.0+cu111
+sentencepiece==0.1.96
+transformers==4.14.1
+nltk==3.6.6
+https://gitlab.com/trungtv/vi_spacy/-/raw/master/vi_core_news_lg/dist/vi_core_news_lg-0.0.1.tar.gz
