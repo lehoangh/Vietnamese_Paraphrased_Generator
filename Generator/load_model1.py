@@ -157,5 +157,5 @@ def load_model_1(CHECK_POINT_PATH, src_field="TRG.Field", trg_field="SRC.Field")
     model_best.load_state_dict(torch.load(CHECK_POINT_PATH)['state_dict'])
     model_best = model_best.to(device)
     
-    return model_best, tokenize_vi, SRC_saved, TRG_saved, spacy_vi, device
+    return model_best, SRC_saved, TRG_saved, spacy_vi, device
 
