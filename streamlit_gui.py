@@ -39,9 +39,8 @@ with st.expander("Input your text right down here", expanded=st.session_state["e
 ######################################################################################################################
 
 
-sent1 = 'The quick brown fox jumps over the lazy dog.'
-sent2 = 'The quick brown fox jumps over the lazy cog.'
-output_1 = [(sent1, "+"), (sent2, "-")]#, (sent3, "+")]
+
+
 
 def paraphrase_generator():#(original, own_para):
     #todo: implement plagiarism detection
